@@ -1,0 +1,414 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.css');
+@import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css');
+
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS — Light Mode
+───────────────────────────────────────────── */
+:root {
+    /* Base colors */
+    --background: 0 0% 100%;
+    --foreground: 142 56% 15%;
+
+    /* Card colors */
+    --card: 0 0% 100%;
+    --card-foreground: 142 56% 15%;
+
+    /* Popover colors */
+    --popover: 0 0% 100%;
+    --popover-foreground: 142 56% 15%;
+
+    /* Primary - Forest Green */
+    --primary: 142 56% 22%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 142 56% 85%;
+    --primary-dark: 142 56% 15%;
+
+    /* Secondary - Earth Brown */
+    --secondary: 25 76% 31%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 25 76% 85%;
+
+    /* Accent - Sun Gold */
+    --accent: 51 100% 50%;
+    --accent-foreground: 142 56% 15%;
+
+    /* Status colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 36 100% 50%;
+    --warning-foreground: 142 56% 15%;
+    --destructive: 4 90% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Muted earth tones */
+    --muted: 25 30% 96%;
+    --muted-foreground: 142 16% 37%;
+
+    /* Border and input */
+    --border: 25 30% 85%;
+    --input: 25 30% 89%;
+    --ring: 142 56% 22%;
+
+    /* Sky Blue for water/info elements */
+    --info: 200 75% 70%;
+    --info-foreground: 142 56% 15%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(142 56% 22%), hsl(142 76% 36%));
+    --gradient-secondary: linear-gradient(135deg, hsl(25 76% 31%), hsl(36 100% 50%));
+    --gradient-hero: linear-gradient(135deg, hsl(142 56% 22%), hsl(25 76% 31%));
+    --gradient-growth: linear-gradient(135deg, hsl(142 76% 36%), hsl(51 100% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(25 30% 98%));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px 0 hsl(142 56% 15% / 0.1);
+    --shadow-md: 0 4px 12px 0 hsl(142 56% 15% / 0.1);
+    --shadow-lg: 0 10px 25px 0 hsl(142 56% 15% / 0.1);
+    --shadow-glow: 0 0 30px hsl(142 56% 22% / 0.2);
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar-background: 25 30% 98%;
+    --sidebar-foreground: 142 56% 15%;
+    --sidebar-primary: 142 56% 22%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 25 30% 95%;
+    --sidebar-accent-foreground: 142 56% 15%;
+    --sidebar-border: 25 30% 85%;
+    --sidebar-ring: 142 56% 22%;
+}
+
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS — Dark Mode
+───────────────────────────────────────────── */
+.dark {
+    --background: 142 56% 8%;
+    --foreground: 25 30% 98%;
+
+    --card: 142 56% 10%;
+    --card-foreground: 25 30% 98%;
+
+    --popover: 142 56% 10%;
+    --popover-foreground: 25 30% 98%;
+
+    --primary: 142 76% 36%;
+    --primary-foreground: 142 56% 8%;
+
+    --secondary: 25 76% 31%;
+    --secondary-foreground: 25 30% 98%;
+
+    --accent: 51 100% 50%;
+    --accent-foreground: 142 56% 8%;
+
+    --muted: 142 56% 15%;
+    --muted-foreground: 25 30% 70%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 142 56% 8%;
+    --warning: 36 100% 50%;
+    --warning-foreground: 142 56% 8%;
+    --destructive: 4 90% 58%;
+    --destructive-foreground: 25 30% 98%;
+
+    --border: 142 56% 20%;
+    --input: 142 56% 20%;
+    --ring: 142 76% 36%;
+
+    --info: 200 75% 70%;
+    --info-foreground: 142 56% 8%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 56% 22%));
+    --gradient-hero: linear-gradient(135deg, hsl(142 56% 15%), hsl(25 76% 25%));
+
+    --sidebar-background: 142 56% 10%;
+    --sidebar-foreground: 25 30% 90%;
+    --sidebar-primary: 142 76% 36%;
+    --sidebar-primary-foreground: 142 56% 8%;
+    --sidebar-accent: 142 56% 15%;
+    --sidebar-accent-foreground: 25 30% 90%;
+    --sidebar-border: 142 56% 20%;
+    --sidebar-ring: 142 76% 36%;
+}
+
+/* ─────────────────────────────────────────────
+   TAILWIND v4 THEME BRIDGE
+   Maps CSS variables → Tailwind utility classes
+   e.g. bg-background, text-foreground, etc.
+───────────────────────────────────────────── */
+@theme inline {
+    --font-sans: 'Geist Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Instrument Serif', serif;
+    --font-mono: 'Geist Mono', monospace;
+
+    --font-weight-light: 300;
+    --font-weight-normal: 300;
+    --font-weight-medium: 400;
+    --font-weight-semibold: 500;
+    --font-weight-bold: 500; /* Redefining bold to be less heavy */
+    --font-weight-black: 500; /* Eliminating heavy 'black' weights */
+
+    --color-background:          hsl(var(--background));
+    --color-foreground:          hsl(var(--foreground));
+
+    --color-card:                hsl(var(--card));
+    --color-card-foreground:     hsl(var(--card-foreground));
+
+    --color-popover:             hsl(var(--popover));
+    --color-popover-foreground:  hsl(var(--popover-foreground));
+
+    --color-primary:             hsl(var(--primary));
+    --color-primary-foreground:  hsl(var(--primary-foreground));
+
+    --color-secondary:           hsl(var(--secondary));
+    --color-secondary-foreground:hsl(var(--secondary-foreground));
+
+    --color-accent:              hsl(var(--accent));
+    --color-accent-foreground:   hsl(var(--accent-foreground));
+
+    --color-muted:               hsl(var(--muted));
+    --color-muted-foreground:    hsl(var(--muted-foreground));
+
+    --color-success:             hsl(var(--success));
+    --color-success-foreground:  hsl(var(--success-foreground));
+
+    --color-warning:             hsl(var(--warning));
+    --color-warning-foreground:  hsl(var(--warning-foreground));
+
+    --color-destructive:         hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+    --color-info:                hsl(var(--info));
+    --color-info-foreground:     hsl(var(--info-foreground));
+
+    --color-border:              hsl(var(--border));
+    --color-input:               hsl(var(--input));
+    --color-ring:                hsl(var(--ring));
+
+    --color-sidebar:             hsl(var(--sidebar-background));
+    --color-sidebar-foreground:  hsl(var(--sidebar-foreground));
+
+    --radius-sm:  calc(var(--radius) - 2px);
+    --radius-md:  var(--radius);
+    --radius-lg:  calc(var(--radius) + 4px);
+    --radius-xl:  calc(var(--radius) + 8px);
+    --radius-2xl: calc(var(--radius) + 12px);
+}
+
+/* ─────────────────────────────────────────────
+   BASE / RESET STYLES
+───────────────────────────────────────────── */
+@layer base {
+    *, *::before, *::after {
+        @apply border-border;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-background text-foreground font-sans antialiased;
+        font-weight: 300;
+        min-height: 100vh;
+        letter-spacing: -0.01em;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-serif);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    img, video {
+        max-width: 100%;
+        display: block;
+    }
+
+    button {
+        cursor: pointer;
+        font-family: inherit;
+    }
+}
+
+/* ─────────────────────────────────────────────
+   MODAL STYLES (Ant Design overrides)
+───────────────────────────────────────────── */
+.custom-modal-wrapper.light-theme .ant-modal-content {
+    background-color: white !important;
+    border: 1px solid hsl(25 30% 85%) !important;
+    box-shadow:
+        0 3px 6px -4px hsl(142 56% 15% / 0.12),
+        0 6px 16px 0 hsl(142 56% 15% / 0.08),
+        0 9px 28px 8px hsl(142 56% 15% / 0.05) !important;
+    border-radius: 12px !important;
+}
+
+.custom-modal-wrapper.dark-theme .ant-modal-content {
+    background-color: hsl(142 56% 10%) !important;
+    border: 1px solid hsl(142 56% 20%) !important;
+    border-radius: 12px !important;
+    color: hsl(25 30% 98%);
+}
+
+.ant-modal-body {
+    padding: 0 !important;
+}
+
+.custom-modal .ant-form {
+    padding: 24px;
+}
+
+/* ─────────────────────────────────────────────
+   COMPONENT CLASSES
+───────────────────────────────────────────── */
+@layer components {
+    /* Hero section styles */
+    .hero-gradient {
+        background: var(--gradient-hero);
+    }
+
+    .hero-text {
+        font-family: var(--font-serif);
+        @apply text-4xl md:text-6xl font-normal leading-[1.1];
+    }
+
+    .growth-gradient {
+        background: var(--gradient-growth);
+    }
+
+    .section-padding {
+        @apply px-4 sm:px-6 lg:px-8 py-16 lg:py-24;
+    }
+
+    /* Button variants */
+    .btn-hero {
+        @apply bg-accent text-accent-foreground hover:bg-accent/90
+               shadow-lg hover:shadow-xl transition-all duration-300
+               px-8 py-4 rounded-xl font-semibold text-lg;
+    }
+
+    .btn-outline-hero {
+        @apply border-2 border-white/20 text-white hover:bg-white/10
+               backdrop-blur-sm transition-all duration-300
+               px-8 py-4 rounded-xl font-semibold text-lg;
+    }
+
+    .btn-primary {
+        @apply bg-primary text-primary-foreground hover:bg-primary/90
+               shadow-md hover:shadow-lg transition-all duration-300
+               px-6 py-3 rounded-lg font-medium;
+    }
+
+    .btn-secondary {
+        @apply bg-secondary text-secondary-foreground hover:bg-secondary/90
+               shadow-md hover:shadow-lg transition-all duration-300
+               px-6 py-3 rounded-lg font-medium;
+    }
+
+    /* Card styles */
+    .feature-card {
+        @apply bg-card border border-border rounded-2xl p-8
+               shadow-md hover:shadow-lg transition-all duration-300
+               hover:-translate-y-1;
+    }
+
+    .pricing-card {
+        @apply bg-card border border-border rounded-2xl p-8
+               shadow-md hover:shadow-lg transition-all duration-300
+               hover:scale-105;
+    }
+
+    .farm-card {
+        @apply bg-card border border-border rounded-2xl p-6
+               shadow-sm hover:shadow-md transition-all duration-300
+               hover:-translate-y-0.5;
+    }
+
+    /* Animation utilities */
+    .fade-in-up {
+        @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+    }
+
+    .fade-in-up.animate {
+        @apply opacity-100 translate-y-0;
+    }
+
+    .grow-in {
+        @apply opacity-0 scale-95 transition-all duration-500 ease-out;
+    }
+
+    .grow-in.animate {
+        @apply opacity-100 scale-100;
+    }
+
+    /* Glassmorphism effect */
+    .glass {
+        @apply backdrop-blur-md bg-white/10 border border-white/20;
+    }
+
+    .earth-glass {
+        @apply backdrop-blur-md bg-secondary/10 border border-secondary/20;
+    }
+
+    /* Status indicators */
+    .status-growing {
+        background-color: hsl(var(--success));
+        color: hsl(var(--success-foreground));
+    }
+
+    .status-harvest {
+        background-color: hsl(var(--accent));
+        color: hsl(var(--accent-foreground));
+    }
+
+    .status-pending {
+        background-color: hsl(var(--warning));
+        color: hsl(var(--warning-foreground));
+    }
+
+    .status-alert {
+        background-color: hsl(var(--destructive));
+        color: hsl(var(--destructive-foreground));
+    }
+
+    /* Farming specific components */
+    .crop-progress {
+        @apply bg-muted rounded-full overflow-hidden;
+    }
+
+    .crop-progress-fill {
+        background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--success)));
+        @apply h-2 transition-all duration-500;
+    }
+
+    .soil-health-indicator {
+        background: linear-gradient(to right, hsl(var(--secondary)), hsl(var(--accent)), hsl(var(--success)));
+        @apply rounded-lg p-4 text-white;
+    }
+}
+
+/* ─────────────────────────────────────────────
+   UTILITY OVERRIDES
+───────────────────────────────────────────── */
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .shadow-glow {
+        box-shadow: var(--shadow-glow);
+    }
+
+    .shadow-card {
+        box-shadow: var(--shadow-md);
+    }
+}

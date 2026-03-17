@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id                      Int       @id @default(autoincrement())
+  email                   String    @unique
+  passwordHash            String?
+  name                    String?
+  phone                   String?
+  location                String?
+  role                    Role      @default(FARMER)
+  provider                String    @default("EMAIL")
+  isVerified              Boolean   @default(false)
+  status                  String    @default("OFFLINE")
+  verificationCode        String?
+  verificationCodeExpiresUnix BigInt?
+  lockedUntil             DateTime?
+  deletedAt               DateTime?
+  lastSeen                DateTime?
+  lastPasswordChange      DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  // Relations
+  saccoId                 Int?
+  sacco                   SACCO?    @relation("SaccoMembers", fields: [saccoId], references: [id])
+  managedSacco            SACCO?    @relation("SaccoSupervisor")
+  
+  produce                 Produce[]
+  loanRequests            LoanRequest[] @relation("FarmerLoans")
+  approvedLoans           LoanRequest[] @relation("SupervisorApprovals")
+  demandListings          DemandListing[]
+  purchases               Order[]       @relation("BuyerOrders")
+  sales                   Order[]       @relation("FarmerOrders")
+  notifications           Notification[]
+  sessions                Session[]
+  refreshTokens           RefreshToken[]
+}
+
+model SACCO {
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  location      String?
+  supervisorId  Int?     @unique
+  supervisor    User?    @relation("SaccoSupervisor", fields: [supervisorId], references: [id])
+  members       User[]   @relation("SaccoMembers")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Produce {
+  id          Int           @id @default(autoincrement())
+  farmerId    Int
+  farmer      User          @relation(fields: [farmerId], references: [id])
+  name        String
+  variety     String?
+  quantity    Float
+  unit        String        @default("KG")
+  price       Float
+  status      ProduceStatus @default(PENDING)
+  image       String?
+  harvestDate DateTime?
+  verifiedAt  DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  orders      Order[]
+}
+
+enum ProduceStatus {
+  PENDING
+  VERIFIED
+  SOLD
+  REJECTED
+}
+
+model LoanRequest {
+  id            Int        @id @default(autoincrement())
+  farmerId      Int
+  farmer        User       @relation("FarmerLoans", fields: [farmerId], references: [id])
+  amount            Float
+  purpose           String
+  repaymentDuration Int        @default(6)
+  guarantorName     String?
+  guarantorPhone    String?
+  kraCertUrl        String?
+  idCardUrl         String?
+  landOwnershipUrl  String?
+  status            LoanStatus @default(PENDING)
+  approvedById      Int?
+  approvedBy        User?      @relation("SupervisorApprovals", fields: [approvedById], references: [id])
+  repaidAmount      Float      @default(0)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+enum LoanStatus {
+  PENDING
+  APPROVED
+  DISBURSED
+  REPAID
+  REJECTED
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  produceId   Int
+  produce     Produce     @relation(fields: [produceId], references: [id])
+  farmerId    Int
+  farmer      User        @relation("FarmerOrders", fields: [farmerId], references: [id])
+  buyerId     Int
+  buyer       User        @relation("BuyerOrders", fields: [buyerId], references: [id])
+  quantity    Float
+  totalPrice  Float
+  status      OrderStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  NEGOTIATING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model DemandListing {
+  id          Int      @id @default(autoincrement())
+  vendorId    Int
+  vendor      User     @relation(fields: [vendorId], references: [id])
+  crop        String
+  quantity    Float
+  targetPrice Float?
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MarketPrice {
+  id          Int      @id @default(autoincrement())
+  commodity   String
+  price       Float
+  unit        String?
+  region      String
+  trend       String?  // UP, DOWN, STABLE
+  date        DateTime @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO, ALERT, SUCCESS, WARNING
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  accessToken String   @db.Text
+  expiresAt   DateTime
+  updatedAt   DateTime @updatedAt
+  userAgent   String?
+  ipAddress   String?
+}
+
+model RefreshToken {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  token     String    @unique
+  revoked   Boolean   @default(false)
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum Role {
+  SYSTEM_ADMIN
+  FARMER
+  SUPERVISOR
+  VENDOR
+  BUYER
+  WHOLESALER
+  SALES
+}
+
