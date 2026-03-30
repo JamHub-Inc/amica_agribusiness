@@ -6,58 +6,60 @@ datasource db {
   provider = "mysql"
 }
 
-
-
 model User {
-  id                      Int       @id @default(autoincrement())
-  email                   String    @unique
-  passwordHash            String?
-  name                    String?
-  phone                   String?
-  location                String?
-  role                    Role      @default(FARMER)
-  provider                String    @default("EMAIL")
-  isVerified              Boolean   @default(false)
-  status                  String    @default("OFFLINE")
-  verificationCode        String?
-  verificationCodeExpiresUnix BigInt?
-  lockedUntil             DateTime?
-  deletedAt               DateTime?
-  lastSeen                DateTime?
-  lastPasswordChange      DateTime?
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  id                          Int       @id @default(autoincrement())
+  email                       String    @unique
+  passwordHash                String?   @map("password_hash")
+  name                        String?
+  phone                       String?
+  location                    String?
+  role                        Role      @default(FARMER)
+  provider                    String    @default("EMAIL")
+  isVerified                  Boolean   @default(false)   @map("is_verified")
+  status                      String    @default("OFFLINE")
+  verificationCode            String?   @map("verification_code")
+  verificationCodeExpiresUnix BigInt?   @map("verification_code_expires_unix")
+  lockedUntil                 DateTime? @map("locked_until")
+  deletedAt                   DateTime? @map("deleted_at")
+  lastSeen                    DateTime? @map("last_seen")
+  lastPasswordChange          DateTime? @map("last_password_change")
+  createdAt                   DateTime  @default(now()) @map("created_at")
+  updatedAt                   DateTime  @updatedAt       @map("updated_at")
 
   // Relations
-  saccoId                 Int?
-  sacco                   SACCO?    @relation("SaccoMembers", fields: [saccoId], references: [id])
-  managedSacco            SACCO?    @relation("SaccoSupervisor")
-  
-  produce                 Produce[]
-  loanRequests            LoanRequest[] @relation("FarmerLoans")
-  approvedLoans           LoanRequest[] @relation("SupervisorApprovals")
-  demandListings          DemandListing[]
-  purchases               Order[]       @relation("BuyerOrders")
-  sales                   Order[]       @relation("FarmerOrders")
-  notifications           Notification[]
-  sessions                Session[]
-  refreshTokens           RefreshToken[]
+  saccoId      Int?    @map("sacco_id")
+  sacco        SACCO?  @relation("SaccoMembers",    fields: [saccoId],  references: [id])
+  managedSacco SACCO?  @relation("SaccoSupervisor")
+
+  produce        Produce[]
+  loanRequests   LoanRequest[]   @relation("FarmerLoans")
+  approvedLoans  LoanRequest[]   @relation("SupervisorApprovals")
+  demandListings DemandListing[]
+  purchases      Order[]         @relation("BuyerOrders")
+  sales          Order[]         @relation("FarmerOrders")
+  notifications  Notification[]
+  sessions       Session[]
+  refreshTokens  RefreshToken[]
+
+  @@map("users")
 }
 
 model SACCO {
-  id            Int      @id @default(autoincrement())
-  name          String   @unique
-  location      String?
-  supervisorId  Int?     @unique
-  supervisor    User?    @relation("SaccoSupervisor", fields: [supervisorId], references: [id])
-  members       User[]   @relation("SaccoMembers")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  location     String?
+  supervisorId Int?     @unique @map("supervisor_id")
+  supervisor   User?    @relation("SaccoSupervisor", fields: [supervisorId], references: [id])
+  members      User[]   @relation("SaccoMembers")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt      @map("updated_at")
+
+  @@map("saccos")
 }
 
 model Produce {
   id          Int           @id @default(autoincrement())
-  farmerId    Int
+  farmerId    Int           @map("farmer_id")
   farmer      User          @relation(fields: [farmerId], references: [id])
   name        String
   variety     String?
@@ -66,133 +68,148 @@ model Produce {
   price       Float
   status      ProduceStatus @default(PENDING)
   image       String?
-  harvestDate DateTime?
-  verifiedAt  DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  harvestDate DateTime?     @map("harvest_date")
+  verifiedAt  DateTime?     @map("verified_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt      @map("updated_at")
   orders      Order[]
+
+  @@map("produce")
 }
 
 enum ProduceStatus {
-  PENDING
-  VERIFIED
-  SOLD
-  REJECTED
+  PENDING   @map("PENDING")
+  VERIFIED  @map("VERIFIED")
+  SOLD      @map("SOLD")
+  REJECTED  @map("REJECTED")
 }
 
 model LoanRequest {
-  id            Int        @id @default(autoincrement())
-  farmerId      Int
-  farmer        User       @relation("FarmerLoans", fields: [farmerId], references: [id])
+  id                Int        @id @default(autoincrement())
+  farmerId          Int        @map("farmer_id")
+  farmer            User       @relation("FarmerLoans", fields: [farmerId], references: [id])
   amount            Float
   purpose           String
-  repaymentDuration Int        @default(6)
-  guarantorName     String?
-  guarantorPhone    String?
-  kraCertUrl        String?
-  idCardUrl         String?
-  landOwnershipUrl  String?
+  repaymentDuration Int        @default(6) @map("repayment_duration")
+  guarantorName     String?    @map("guarantor_name")
+  guarantorPhone    String?    @map("guarantor_phone")
+  kraCertUrl        String?    @map("kra_cert_url")
+  idCardUrl         String?    @map("id_card_url")
+  landOwnershipUrl  String?    @map("land_ownership_url")
   status            LoanStatus @default(PENDING)
-  approvedById      Int?
+  approvedById      Int?       @map("approved_by_id")
   approvedBy        User?      @relation("SupervisorApprovals", fields: [approvedById], references: [id])
-  repaidAmount      Float      @default(0)
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  repaidAmount      Float      @default(0) @map("repaid_amount")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt      @map("updated_at")
+
+  @@map("loan_requests")
 }
 
 enum LoanStatus {
-  PENDING
-  APPROVED
-  DISBURSED
-  REPAID
-  REJECTED
+  PENDING   @map("PENDING")
+  APPROVED  @map("APPROVED")
+  DISBURSED @map("DISBURSED")
+  REPAID    @map("REPAID")
+  REJECTED  @map("REJECTED")
 }
 
 model Order {
-  id          Int         @id @default(autoincrement())
-  produceId   Int
-  produce     Produce     @relation(fields: [produceId], references: [id])
-  farmerId    Int
-  farmer      User        @relation("FarmerOrders", fields: [farmerId], references: [id])
-  buyerId     Int
-  buyer       User        @relation("BuyerOrders", fields: [buyerId], references: [id])
-  quantity    Float
-  totalPrice  Float
-  status      OrderStatus @default(PENDING)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id         Int         @id @default(autoincrement())
+  produceId  Int         @map("produce_id")
+  produce    Produce     @relation(fields: [produceId], references: [id])
+  farmerId   Int         @map("farmer_id")
+  farmer     User        @relation("FarmerOrders", fields: [farmerId], references: [id])
+  buyerId    Int         @map("buyer_id")
+  buyer      User        @relation("BuyerOrders", fields: [buyerId], references: [id])
+  quantity   Float
+  totalPrice Float       @map("total_price")
+  status     OrderStatus @default(PENDING)
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt      @map("updated_at")
+
+  @@map("orders")
 }
 
 enum OrderStatus {
-  PENDING
-  NEGOTIATING
-  CONFIRMED
-  COMPLETED
-  CANCELLED
+  PENDING     @map("PENDING")
+  NEGOTIATING @map("NEGOTIATING")
+  CONFIRMED   @map("CONFIRMED")
+  COMPLETED   @map("COMPLETED")
+  CANCELLED   @map("CANCELLED")
 }
 
 model DemandListing {
   id          Int      @id @default(autoincrement())
-  vendorId    Int
+  vendorId    Int      @map("vendor_id")
   vendor      User     @relation(fields: [vendorId], references: [id])
   crop        String
   quantity    Float
-  targetPrice Float?
+  targetPrice Float?   @map("target_price")
   status      String   @default("OPEN")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt      @map("updated_at")
+
+  @@map("demand_listings")
 }
 
 model MarketPrice {
-  id          Int      @id @default(autoincrement())
-  commodity   String
-  price       Float
-  unit        String?
-  region      String
-  trend       String?  // UP, DOWN, STABLE
-  date        DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  commodity String
+  price     Float
+  unit      String?
+  region    String
+  trend     String?  // UP, DOWN, STABLE
+  date      DateTime @default(now())
+
+  @@map("market_prices")
 }
 
 model Notification {
   id        Int      @id @default(autoincrement())
-  userId    Int
+  userId    Int      @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
   title     String
   message   String
   type      String   @default("INFO") // INFO, ALERT, SUCCESS, WARNING
   read      Boolean  @default(false)
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notifications")
 }
 
 model Session {
   id          Int      @id @default(autoincrement())
-  userId      Int
+  userId      Int      @map("user_id")
   user        User     @relation(fields: [userId], references: [id])
-  accessToken String   @db.Text
-  expiresAt   DateTime
-  updatedAt   DateTime @updatedAt
-  userAgent   String?
-  ipAddress   String?
+  accessToken String   @db.Text @map("access_token")
+  expiresAt   DateTime @map("expires_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  userAgent   String?  @map("user_agent")
+  ipAddress   String?  @map("ip_address")
+
+  @@map("sessions")
 }
 
 model RefreshToken {
   id        Int       @id @default(autoincrement())
-  userId    Int
+  userId    Int       @map("user_id")
   user      User      @relation(fields: [userId], references: [id])
   token     String    @unique
   revoked   Boolean   @default(false)
-  revokedAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt      @map("updated_at")
+
+  @@map("refresh_tokens")
 }
 
 enum Role {
-  SYSTEM_ADMIN
-  FARMER
-  SUPERVISOR
-  VENDOR
-  BUYER
-  WHOLESALER
-  SALES
+  SYSTEM_ADMIN @map("SYSTEM_ADMIN")
+  FARMER       @map("FARMER")
+  SUPERVISOR   @map("SUPERVISOR")
+  VENDOR       @map("VENDOR")
+  BUYER        @map("BUYER")
+  WHOLESALER   @map("WHOLESALER")
+  SALES        @map("SALES")
 }
-
