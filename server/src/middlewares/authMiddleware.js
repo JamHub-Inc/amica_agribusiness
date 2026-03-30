@@ -172,10 +172,13 @@ export const protect = async (req, res, next) => {
       isVerified: decoded.isVerified || false 
     };
     
-    // Update user last seen (non-blocking)
+    // Update user last seen (non-blocking) - Commented out to prevent pool timeout
+    /*
     updateUserLastSeen(decoded.id).catch((err) => {
       console.error('Failed to update last seen:', err);
     });
+    */
+
 
     // Check for auto-refresh header
     const shouldAutoRefresh = req.headers['x-auto-refresh'] === 'true';
@@ -304,13 +307,16 @@ export const requireVerified = async (req, res, next) => {
       });
     }
     
-    // Update user status to ONLINE if not already
+    // Update user status to ONLINE if not already - Commented out for offline-feature removal
+    /*
     if (user.status !== 'ONLINE') {
       await prisma.user.update({
         where: { id: req.user.id },
         data: { status: 'ONLINE' }
       }).catch(console.error);
     }
+    */
+
     
     return next();
   } catch (error) {

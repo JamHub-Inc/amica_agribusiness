@@ -66,6 +66,8 @@ export const loginController = async (req, res) => {
     }
     
     // Only set ONLINE if verified
+    // Update user status - Commented out for offline-feature removal
+    /*
     await prisma.user.update({ 
       where: { id: user.id }, 
       data: { 
@@ -73,6 +75,8 @@ export const loginController = async (req, res) => {
         lastSeen: new Date() 
       } 
     });
+    */
+
 
     const accessToken = generateToken(user);
     const refreshToken = generateRefreshToken(user);
@@ -217,6 +221,7 @@ export const createUserController = async (req, res) => {
   }
 };
 
+/*
 export const userHeartbeatController = async (req, res) => {
   const { userId } = req.body;
   
@@ -248,6 +253,8 @@ export const userHeartbeatController = async (req, res) => {
     });
   }
 };
+*/
+
 export const registerController = async (req, res) => {
   const { error, value } = signupValidator(req.body);
   if (error) return res.status(400).json({ message: error.details.map(d => d.message).join(', ') });
@@ -266,6 +273,8 @@ export const registerController = async (req, res) => {
     await saveVerificationCode(user.id, verificationCode);
     await sendVerificationEmail(user.email, user.name || 'User', verificationCode);
 
+    // Update user status - Commented out for offline-feature removal
+    /*
     await prisma.user.update({ 
       where: { id: user.id }, 
       data: { 
@@ -273,6 +282,8 @@ export const registerController = async (req, res) => {
         lastSeen: new Date()
       } 
     });
+    */
+
 
     const accessToken = generateToken(user);
     const refreshToken = generateRefreshToken(user);

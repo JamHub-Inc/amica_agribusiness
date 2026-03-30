@@ -37,14 +37,17 @@ const buildCreatePayload = async (data) => {
     phone,
     location: data.location,
     role: normalizeRole(data.role),
-    status: data.status ? data.status.toUpperCase() : 'OFFLINE', 
+    // status: data.status ? data.status.toUpperCase() : 'OFFLINE', 
     passwordHash,
     provider: 'EMAIL',
     isVerified: data.isVerified === true || data.isVerified === 'true',
   };
+  /*
   if (!['ONLINE', 'OFFLINE', 'AWAY', 'BUSY'].includes(payload.status)) {
     payload.status = 'OFFLINE';
   }
+  */
+
 
   Object.keys(payload).forEach((k) => payload[k] === undefined && delete payload[k]);
   return payload;
@@ -66,6 +69,7 @@ const buildUpdatePayload = async (data) => {
 
   if (data.role !== undefined) out.role = normalizeRole(data.role);
   
+  /*
   if (data.status !== undefined) {
     out.status = typeof data.status === 'string' ? data.status.toUpperCase() : data.status;
     
@@ -74,6 +78,8 @@ const buildUpdatePayload = async (data) => {
       out.status = 'OFFLINE';
     }
   }
+  */
+
 
   const lastSeen = data.lastSeen ?? data.last_seen;
   const lastSeenDate = toDateOrUndefined(lastSeen);

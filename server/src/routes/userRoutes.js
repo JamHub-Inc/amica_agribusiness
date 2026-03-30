@@ -45,7 +45,8 @@ router.post('/password/reset', resetPasswordController);
 router.use(protect);
 router.post('/password/change', changePasswordController);
 router.get('/me', getCurrentUserController);
-router.post('/heartbeat', userHeartbeatController);
+// router.post('/heartbeat', userHeartbeatController);
+
 router.post('/join-sacco', joinSaccoController);
 
 // Admin only routes
