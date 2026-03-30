@@ -10,7 +10,8 @@ import {
   updateUserController,
   createUserController,
   getUserByIdController,
-  userHeartbeatController,
+// userHeartbeatController,
+
   sendUserEmailController,
   verifyEmailController,
   resendVerificationController,

@@ -1,13 +1,34 @@
 import 'dotenv/config';
-import { PrismaClient } from '@prisma/client';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
-const prisma = new PrismaClient({
-  log: ['error', 'warn'],
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-});
+const { PrismaClient } = require('@prisma/client');
+const { PrismaMariaDb } = require('@prisma/adapter-mariadb');
+
+function parseDatabaseUrl(url) {
+  if (!url) throw new Error('DATABASE_URL environment variable is not set.');
+  try {
+    const parsed = new URL(url);
+    return {
+      host: parsed.hostname === 'localhost' ? '127.0.0.1' : parsed.hostname,
+      port: parsed.port ? Number(parsed.port) : 3306,
+      user: parsed.username,
+      password: parsed.password,
+      database: parsed.pathname.replace(/^\//, ''),
+      connectionLimit: 50,
+      connectTimeout: 20000,
+      acquireTimeout: 20000,
+    };
+  } catch (e) {
+    throw new Error(`Invalid DATABASE_URL: ${e.message}`);
+  }
+}
+
+const connectionOptions = parseDatabaseUrl(process.env.DATABASE_URL);
+const adapter = new PrismaMariaDb(connectionOptions);
+const prisma = new PrismaClient({ adapter, log: ['error', 'warn'] });
 
 export default prisma;
+
+
+
