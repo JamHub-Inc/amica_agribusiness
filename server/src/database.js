@@ -9,11 +9,13 @@ function parseDatabaseUrl(url) {
   try {
     const parsed = new URL(url);
     return {
-      host: parsed.hostname,
+      host: parsed.hostname === 'localhost' ? '127.0.0.1' : parsed.hostname,
       port: parsed.port ? Number(parsed.port) : 3306,
       user: parsed.username,
       password: parsed.password,
       database: parsed.pathname.replace(/^\//, ''),
+      connectionLimit: 50,
+      connectTimeout: 20000,
     };
   } catch (e) {
     throw new Error(`Invalid DATABASE_URL: ${e.message}`);
