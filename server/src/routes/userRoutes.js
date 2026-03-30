@@ -10,7 +10,7 @@ import {
   updateUserController,
   createUserController,
   getUserByIdController,
-// userHeartbeatController,
+userHeartbeatController,
 
   sendUserEmailController,
   verifyEmailController,
@@ -31,8 +31,8 @@ import { autoRefreshToken } from '../utils/tokenUtils.js';
 const router = express.Router();
 
 // Public routes
-router.post('/register', registerController); // primary route
-router.post('/signup', registerController);   // alias
+router.post('/register', registerController);
+router.post('/signup', registerController);  
 router.post('/login', loginController);
 router.post('/logout', logoutController);
 router.post('/refresh-token', refreshTokenController);
@@ -46,7 +46,7 @@ router.post('/password/reset', resetPasswordController);
 router.use(protect);
 router.post('/password/change', changePasswordController);
 router.get('/me', getCurrentUserController);
-// router.post('/heartbeat', userHeartbeatController);
+router.post('/heartbeat', userHeartbeatController);
 
 router.post('/join-sacco', joinSaccoController);
 

@@ -308,14 +308,14 @@ export const requireVerified = async (req, res, next) => {
     }
     
     // Update user status to ONLINE if not already - Commented out for offline-feature removal
-    /*
+
     if (user.status !== 'ONLINE') {
       await prisma.user.update({
         where: { id: req.user.id },
         data: { status: 'ONLINE' }
       }).catch(console.error);
     }
-    */
+
 
     
     return next();

@@ -42,11 +42,10 @@ const buildCreatePayload = async (data) => {
     provider: 'EMAIL',
     isVerified: data.isVerified === true || data.isVerified === 'true',
   };
-  /*
+  
   if (!['ONLINE', 'OFFLINE', 'AWAY', 'BUSY'].includes(payload.status)) {
     payload.status = 'OFFLINE';
   }
-  */
 
 
   Object.keys(payload).forEach((k) => payload[k] === undefined && delete payload[k]);
@@ -68,8 +67,7 @@ const buildUpdatePayload = async (data) => {
   if (location !== undefined) out.location = location;
 
   if (data.role !== undefined) out.role = normalizeRole(data.role);
-  
-  /*
+
   if (data.status !== undefined) {
     out.status = typeof data.status === 'string' ? data.status.toUpperCase() : data.status;
     
@@ -78,7 +76,7 @@ const buildUpdatePayload = async (data) => {
       out.status = 'OFFLINE';
     }
   }
-  */
+
 
 
   const lastSeen = data.lastSeen ?? data.last_seen;
