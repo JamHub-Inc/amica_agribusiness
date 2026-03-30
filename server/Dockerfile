@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -18,4 +18,4 @@ RUN npx prisma generate
 EXPOSE 3000
 
 # Start the Node server
-CMD ["npm", "start"]
+CMD ["node", "main.js"]
