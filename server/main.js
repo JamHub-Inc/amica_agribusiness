@@ -3,8 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Import routes
 import userRoutes from './src/routes/userRoutes.js';
@@ -20,9 +18,6 @@ import adminRoutes from './src/routes/adminRoutes.js';
 // Import services and utilities
 import { initializeCronJobs } from './src/utils/cronJobs.js';
 
-// ES modules fix for __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Global BigInt serialization fix for Prisma/JSON
 BigInt.prototype.toJSON = function() {
@@ -79,14 +74,10 @@ app.get('/api/health', (req, res) => {
   res.json({ ok: true, timestamp: new Date() });
 });
 
-// Serve frontend in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'dist')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  });
-}
+// 404 handler for unknown API routes
+app.use('/api/{*path}', (req, res) => {
+  res.status(404).json({ success: false, message: 'API route not found' });
+});
 
 // Global error handler
 app.use((err, req, res, next) => {
