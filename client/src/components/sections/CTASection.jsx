@@ -8,8 +8,8 @@ const CTASection = () => {
     const navigate = useNavigate()
 
     const registrations = [
-        { label: 'Register as Farmer', action: () => navigate('/auth/signup?role=farmer'), icon: Sprout },
-        { label: 'Login as Supervisor', action: () => navigate('/auth/login?role=supervisor'), icon: Users },
+        { label: 'Register as Farmer', action: () => navigate('/register?role=farmer'), icon: Sprout },
+        { label: 'Login as Supervisor', action: () => navigate('/login?role=supervisor'), icon: Users },
         { label: 'View Market Prices', action: () => navigate('/market-prices'), icon: TrendingUp },
     ]
 

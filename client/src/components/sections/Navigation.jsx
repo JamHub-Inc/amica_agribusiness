@@ -10,10 +10,9 @@ const Navigation = () => {
 
     const navItems = [
         { name: 'Home', path: '/' },
-        { name: 'Features', path: '/features' },
-        { name: 'Solutions', path: '/solutions' },
-        { name: 'Pricing', path: '/pricing' },
-        { name: 'Industries', path: '/industries' },
+        { name: 'Features', path: '#features' },
+        { name: 'Process', path: '#how-it-works' },
+        { name: 'Impact', path: '#impact' },
     ];
 
     const containerVariants = {

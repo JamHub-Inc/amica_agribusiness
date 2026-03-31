@@ -23,17 +23,6 @@ const Footer = () => {
                             A SACCO-integrated digital platform designed to enhance transparency, 
                             coordination, and fair pricing in agricultural value chains.
                         </p>
-                        <div className="flex space-x-4">
-                            {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
-                                <a
-                                    key={i}
-                                    href="#"
-                                    className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300"
-                                >
-                                    <Icon className="w-5 h-5" />
-                                </a>
-                            ))}
-                        </div>
                     </div>
 
                     {/* Quick Links */}
@@ -44,9 +33,9 @@ const Footer = () => {
                                 { name: 'Home', path: '/' },
                                 { name: 'Market Prices', path: '/market-prices' },
                                 { name: 'Loan Management', path: '/loans' },
-                                { name: 'Produce Tracking', path: '/tracking' },
+                                { name: 'My Produce', path: '/my-produce' },
                                 { name: 'Reports', path: '/reports' },
-                                { name: 'Login', path: '/auth/login' }
+                                { name: 'Login', path: '/login' }
                             ].map((item) => (
                                 <li key={item.name}>
                                     <Link to={item.path} className="text-primary-foreground/60 hover:text-accent transition-colors flex items-center gap-2">
@@ -63,9 +52,9 @@ const Footer = () => {
                         <h3 className="text-lg font-bold text-white mb-8">User Access</h3>
                         <ul className="space-y-4">
                             {[
-                                { name: 'Farmer Registration', path: '/auth/signup?role=farmer' },
-                                { name: 'Supervisor Login', path: '/auth/login?role=supervisor' },
-                                { name: 'Admin Portal', path: '/auth/login?role=admin' }
+                                { name: 'Farmer Registration', path: '/register?role=farmer' },
+                                { name: 'Supervisor Login', path: '/login?role=supervisor' },
+                                { name: 'Admin Portal', path: '/login?role=admin' }
                             ].map((item) => (
                                 <li key={item.name}>
                                     <Link to={item.path} className="text-primary-foreground/60 hover:text-accent transition-colors flex items-center gap-2">
@@ -111,10 +100,6 @@ const Footer = () => {
                         <div className="text-primary-foreground/40 text-sm">
                             © {getCurrentYear()} Integrated Food Supply & Price Management System <br />
                             <span className="text-accent/60">Designed for Agricultural Empowerment</span>
-                        </div>
-                        <div className="flex space-x-8 text-sm font-medium">
-                            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
                         </div>
                     </div>
                 </div>

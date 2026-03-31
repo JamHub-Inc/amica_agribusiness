@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY || '98726c97c1bc43708c5111231261003';
 
-export default function WeatherForecast() {
+export default function WeatherForecast({ onFetchComplete }) {
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [locationStatus, setLocationStatus] = useState('idle'); // idle | requesting | granted | denied
@@ -20,7 +20,7 @@ export default function WeatherForecast() {
       );
       if (!response.ok) throw new Error(`Weather API error: ${response.statusText}`);
       const data = await response.json();
-      setWeather({
+      const weatherData = {
         temp: data.current.temp_c,
         feelsLike: data.current.feelslike_c,
         condition: data.current.condition.text,
@@ -31,7 +31,13 @@ export default function WeatherForecast() {
         humidity: data.current.humidity,
         windKph: data.current.wind_kph,
         lastUpdated: data.current.last_updated,
-      });
+        lat: data.location.lat,
+        lon: data.location.lon,
+      };
+      setWeather(weatherData);
+      if (onFetchComplete) {
+        onFetchComplete(weatherData);
+      }
     } catch (err) {
       setError('Failed to fetch weather. Please try again.');
       console.error('WeatherAPI error:', err);

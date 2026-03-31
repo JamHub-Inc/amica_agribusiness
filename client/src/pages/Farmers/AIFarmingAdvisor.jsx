@@ -6,19 +6,30 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Sparkles, Loader2, Calendar, MapPin, Sprout } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import WeatherForecast from './components/WeatherForecast';
 
 export default function AIFarmingAdvisor() {
   const { user } = useAuth();
   const [advice, setAdvice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentWeather, setCurrentWeather] = useState(null);
 
-  const fetchAdvice = async () => {
+  const fetchAdvice = async (weatherData = null) => {
     setLoading(true);
     setError(null);
     try {
-      const location = user?.location || 'Nairobi';
-      const response = await advisorService.getAdvice(location);
+      let response;
+      if (weatherData) {
+        response = await advisorService.getAdviceFromRealTime({
+          location: weatherData.location,
+          weather: weatherData
+        });
+      } else {
+        const location = user?.location || 'Nairobi';
+        response = await advisorService.getAdvice(location);
+      }
+      
       if (response.success) {
         setAdvice(response.data);
       } else {
@@ -31,9 +42,15 @@ export default function AIFarmingAdvisor() {
     }
   };
 
+  const handleWeatherFetch = (weatherData) => {
+    setCurrentWeather(weatherData);
+    fetchAdvice(weatherData);
+  };
+
   useEffect(() => {
-    fetchAdvice();
-  }, [user?.location]);
+    // Initial fetch is deferred to WeatherForecast's onFetchComplete
+    // which triggers handleWeatherFetch automatically when it gets location
+  }, []);
 
   return (
     <FarmerDashboardLayout title="AI Farming Advisor">
@@ -51,17 +68,23 @@ export default function AIFarmingAdvisor() {
           <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-accent rounded-full opacity-20 blur-3xl"></div>
         </div>
 
-        <Card className="border-none shadow-md rounded-2xl overflow-hidden min-h-[400px]">
-          <CardHeader className="border-b border-border/50 pb-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle className="text-xl">Detailed Farm Analysis</CardTitle>
-                <CardDescription>Location: {user?.location || 'Nairobi'}</CardDescription>
-              </div>
-              <Button 
-                variant="outline" 
-                onClick={fetchAdvice} 
-                disabled={loading}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <WeatherForecast onFetchComplete={handleWeatherFetch} />
+          </div>
+
+          <div className="lg:col-span-2">
+            <Card className="border-none shadow-md rounded-2xl overflow-hidden min-h-[400px]">
+              <CardHeader className="border-b border-border/50 pb-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle className="text-xl">Detailed Farm Analysis</CardTitle>
+                    <CardDescription>Location: {currentWeather?.location || user?.location || 'Nairobi'}</CardDescription>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => fetchAdvice(currentWeather)} 
+                    disabled={loading}
                 className="rounded-full"
               >
                 {loading ? <Loader2 size={16} className="animate-spin mr-2" /> : <Sparkles size={16} className="mr-2 text-primary" />}
@@ -175,9 +198,11 @@ export default function AIFarmingAdvisor() {
                   </div>
                 </motion.div>
               )}
-            </AnimatePresence>
-          </CardContent>
-        </Card>
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
       </div>
     </FarmerDashboardLayout>
   );

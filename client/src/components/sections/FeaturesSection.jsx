@@ -194,10 +194,10 @@ const FeaturesPreview = () => {
                             </div>
 
                             {/* Interactive Link */}
-                            <div className="flex items-center gap-2 text-sm font-bold text-primary cursor-pointer mt-auto">
+                            <a href="#how-it-works" className="flex items-center gap-2 text-sm font-bold text-primary cursor-pointer mt-auto no-underline">
                                 <span>Learn how it works</span>
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </div>
+                            </a>
                         </motion.div>
                     ))}
                 </motion.div>
@@ -210,10 +210,10 @@ const FeaturesPreview = () => {
                     transition={{ delay: 0.6 }}
                     viewport={{ once: true }}
                 >
-                    <button className="btn-primary py-5 px-12 rounded-2xl text-lg font-bold group inline-flex items-center gap-3">
-                        <span>Explore all features</span>
+                    <a href="#how-it-works" className="btn-primary py-5 px-12 rounded-2xl text-lg font-bold group inline-flex items-center gap-3 no-underline">
+                        <span>See how it works</span>
                         <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </a>
                     
                     <div className="mt-8 flex items-center justify-center gap-4 text-muted-foreground font-medium">
                         <div className="flex items-center gap-1.5">

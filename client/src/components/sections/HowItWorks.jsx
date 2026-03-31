@@ -154,7 +154,7 @@ export default function HowItWorks() {
             whileTap={{ scale: 0.95 }}
           >
             <a
-              href="/auth/signup"
+              href="/register"
               className="btn-primary inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg shadow-glow hover:shadow-lg transition-all group relative overflow-hidden"
             >
               <span className="relative z-10">Get Started Now</span>

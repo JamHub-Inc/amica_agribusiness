@@ -100,7 +100,7 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20">
             <Button
               className="btn-hero min-w-[200px] border-none shadow-glow hover:shadow-glow-accent group"
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/register')}
             >
               <span className="flex items-center">
                 {slides[currentSlide].cta}
@@ -109,7 +109,7 @@ const HeroSection = () => {
             </Button>
             <Button
               className="btn-outline-hero min-w-[200px] border-2 border-white/40 group"
-              onClick={() => navigate('/auth/login')}
+              onClick={() => navigate('/login')}
             >
               <span className="flex items-center">
                 <Play className="mr-3 h-6 w-6 group-hover:scale-110 transition-transform duration-300" />

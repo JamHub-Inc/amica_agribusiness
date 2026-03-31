@@ -185,14 +185,15 @@ const PriceAwareness = () => {
                             </div>
 
                             {/* Bottom CTA Button - Using btn-primary class */}
-                            <motion.button 
-                                className="w-full mt-10 btn-primary py-5 rounded-2xl font-bold flex items-center justify-center gap-3"
+                            <motion.a 
+                                href="/register"
+                                className="w-full mt-10 btn-primary py-5 rounded-2xl font-bold flex items-center justify-center gap-3 no-underline"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <span className="text-lg">See Impact in Action</span>
                                 <ArrowUpRight className="w-6 h-6" />
-                            </motion.button>
+                            </motion.a>
                         </div>
                     </motion.div>
                 </div>
